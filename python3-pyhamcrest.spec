@@ -6,7 +6,7 @@ Summary:	Hamcrest framework for matcher objects
 Summary(pl.UTF-8):	Szkielet Hamcrest do obiektów dopasowujących
 Name:		python3-pyhamcrest
 Version:	2.0.2
-Release:	2
+Release:	3
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/pyhamcrest/
