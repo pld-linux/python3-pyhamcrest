@@ -1,25 +1,30 @@
 #
 # Conditional build:
 %bcond_without	doc	# Sphinx documentation
+%bcond_without	tests	# unit tests
 
 Summary:	Hamcrest framework for matcher objects
 Summary(pl.UTF-8):	Szkielet Hamcrest do obiektów dopasowujących
 Name:		python3-pyhamcrest
-Version:	2.0.2
-Release:	5
+Version:	2.0.3
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/pyhamcrest/
 Source0:	https://files.pythonhosted.org/packages/source/p/pyhamcrest/PyHamcrest-%{version}.tar.gz
-# Source0-md5:	7a086f0b067f8d38958ec32f054559b4
+# Source0-md5:	f628e2ff2b6a2518f54b15d70ac34c9d
 URL:		https://pypi.org/project/PyHamcrest/
 BuildRequires:	python3-modules >= 1:3.5
 BuildRequires:	python3-setuptools
+%if %{with tests}
+BuildRequires:	python3-pytest >= 5.0
+#BuildRequires:	python3-pytest-sugar
+%endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with doc}
-BuildRequires:	python3-sphinx_rtd_theme
-BuildRequires:	sphinx-pdg-3
+BuildRequires:	python3-alabaster >= 0.7
+BuildRequires:	sphinx-pdg-3 >= 3.0
 %endif
 Requires:	python3-modules >= 1:3.5
 BuildArch:	noarch
@@ -56,6 +61,12 @@ Dokumentacja API modułu Pythona pyhamcrest.
 %build
 %py3_build
 
+%if %{with tests}
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+PYTHONPATH=$(pwd)/src \
+%{__python3} -m pytest tests
+%endif
+
 %if %{with doc}
 PYTHONPATH=$(pwd)/src \
 %{__make} -C doc html \
@@ -75,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES.txt LICENSE.txt README.rst
+%doc CHANGELOG.rst LICENSE.txt README.rst
 %{py3_sitescriptdir}/hamcrest
 %{py3_sitescriptdir}/PyHamcrest-%{version}-py*.egg-info
 %{_examplesdir}/python3-pyhamcrest-%{version}
