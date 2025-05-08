@@ -6,16 +6,17 @@
 Summary:	Hamcrest framework for matcher objects
 Summary(pl.UTF-8):	Szkielet Hamcrest do obiektów dopasowujących
 Name:		python3-pyhamcrest
-Version:	2.0.3
-Release:	3
+Version:	2.1.0
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/pyhamcrest/
-Source0:	https://files.pythonhosted.org/packages/source/p/pyhamcrest/PyHamcrest-%{version}.tar.gz
-# Source0-md5:	f628e2ff2b6a2518f54b15d70ac34c9d
+Source0:	https://files.pythonhosted.org/packages/source/p/pyhamcrest/pyhamcrest-%{version}.tar.gz
+# Source0-md5:	c731efc9bcb93ef4f73d110f5ca8e844
 URL:		https://pypi.org/project/PyHamcrest/
+BuildRequires:	python3-build
+BuildRequires:	python3-installer
 BuildRequires:	python3-modules >= 1:3.5
-BuildRequires:	python3-setuptools
 %if %{with tests}
 BuildRequires:	python3-pytest >= 5.0
 #BuildRequires:	python3-pytest-sugar
@@ -56,10 +57,10 @@ API documentation for Python pyhamcrest module.
 Dokumentacja API modułu Pythona pyhamcrest.
 
 %prep
-%setup -q -n PyHamcrest-%{version}
+%setup -q -n pyhamcrest-%{version}
 
 %build
-%py3_build
+%py3_build_pyproject
 
 %if %{with tests}
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
@@ -76,7 +77,7 @@ PYTHONPATH=$(pwd)/src \
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%py3_install
+%py3_install_pyproject
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/python3-pyhamcrest-%{version}
 cp -a examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python3-pyhamcrest-%{version}
@@ -88,7 +89,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc CHANGELOG.rst LICENSE.txt README.rst
 %{py3_sitescriptdir}/hamcrest
-%{py3_sitescriptdir}/PyHamcrest-%{version}-py*.egg-info
+%{py3_sitescriptdir}/pyhamcrest-%{version}.dist-info
 %{_examplesdir}/python3-pyhamcrest-%{version}
 
 %if %{with doc}
