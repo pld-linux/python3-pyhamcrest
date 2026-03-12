@@ -13,21 +13,30 @@ Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/pyhamcrest/
 Source0:	https://files.pythonhosted.org/packages/source/p/pyhamcrest/pyhamcrest-%{version}.tar.gz
 # Source0-md5:	c731efc9bcb93ef4f73d110f5ca8e844
+Patch0:		pyhamcrest-numpy2.patch
 URL:		https://pypi.org/project/PyHamcrest/
 BuildRequires:	python3-build
+BuildRequires:	python3-hatch-vcs
+BuildRequires:	python3-hatchling
 BuildRequires:	python3-installer
-BuildRequires:	python3-modules >= 1:3.5
+BuildRequires:	python3-modules >= 1:3.6
 %if %{with tests}
+BuildRequires:	python3-PyYAML
+%if "%{py3_ver}" == "3.6"
+BuildRequires:	python3-dataclasses
+%endif
+BuildRequires:	python3-numpy
 BuildRequires:	python3-pytest >= 5.0
 #BuildRequires:	python3-pytest-sugar
+#BuildRequires:	python3-pytest-xdist
 %endif
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
+BuildRequires:	rpmbuild(macros) >= 2.044
 %if %{with doc}
 BuildRequires:	python3-alabaster >= 0.7
-BuildRequires:	sphinx-pdg-3 >= 3.0
+BuildRequires:	sphinx-pdg-3 >= 4.0
 %endif
-Requires:	python3-modules >= 1:3.5
+Requires:	python3-modules >= 1:3.6
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -58,6 +67,7 @@ Dokumentacja API modułu Pythona pyhamcrest.
 
 %prep
 %setup -q -n pyhamcrest-%{version}
+%patch -P0 -p1
 
 %build
 %py3_build_pyproject
@@ -80,7 +90,7 @@ rm -rf $RPM_BUILD_ROOT
 %py3_install_pyproject
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/python3-pyhamcrest-%{version}
-cp -a examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python3-pyhamcrest-%{version}
+cp -p examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python3-pyhamcrest-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -95,5 +105,5 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with doc}
 %files apidocs
 %defattr(644,root,root,755)
-%doc doc/_build/html/{_static,*.html,*.js}
+%doc doc/_build/html/{_static,matcher_internals,matcher_library,*.html,*.js}
 %endif
